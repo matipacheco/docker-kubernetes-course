@@ -4,7 +4,20 @@ services:
   - docker
 
 before_install:
-  - docker build -t matipacheco/docker-react -f 3-react-app-production-deploy-workflow/Dockerfile.dev .
+  - docker build -t matipacheco/docker-react -f Dockerfile.dev .
 
 script:
   - docker run -e CI=true matipacheco/docker-react npm run test -- --coverage
+
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-1"
+  app: "docker-react"
+  env: "DockerReact-env"
+  bucket_name: "elasticbeanstalk-us-east-1-001061461260"
+  bucket_path: "docker-react"
+  on:
+    # branch: master
+    branch: 3-react-app-production-deploy-workflow
+  access_key_id: $AWS_ACCESS_KEY_ID
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
