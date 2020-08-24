@@ -1,0 +1,13 @@
+version: "3"
+services:
+  redis-server:
+    image: "redis"
+  node-app:
+    # Builds an image using the Dockerfile in the current directory
+    build: .
+    ports:
+      # PORT_IN_LOCAL_MACHINE : PORT_IN_CONTAINER
+      - "8080:8080"
+    # Restart policy! It configures the container so that it knows exactly what to do if the node-app stops or crashes
+    # Options: "no", always, on-failure, unless-stopped
+    restart: on-failure
