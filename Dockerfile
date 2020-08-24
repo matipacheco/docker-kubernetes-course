@@ -14,6 +14,7 @@ RUN npm run build
 
 # Step 2: Run phase
 FROM nginx
+EXPOSE 80
 
 # By adding the from option, we are telling the Dockerfile
 # to use the file system (or snapshot) generated in a specific step.
