@@ -1,0 +1,34 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t matipacheco/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true matipacheco/react-test npm test
+
+after_success:
+  - docker build -t matipacheco/multi-client ./client .
+  - docker build -t matipacheco/multi-nginx ./nginx .
+  - docker build -t matipacheco/multi-server ./server .
+  - docker build -t matipacheco/multi-worker ./worker .
+  # Login to the Docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password_stdin
+  # Take those images and push them to Docker Hub
+  - docker push matipacheco/multi-client
+  - docker push matipacheco/multi-nginx
+  - docker push matipacheco/multi-server
+  - docker push matipacheco/multi-worker
+
+deploy:
+  provide: elasticbeanstalk
+  region: us-east-1
+  app: multi-docker
+  env: MultiDocker-env
+  bucket_name: elasticbeanstalk-us-east-1-SOME_ID
+  bucket_path: docker-multi
+  on:
+    branch: 4-fibonacci-multi-container-calculator
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
