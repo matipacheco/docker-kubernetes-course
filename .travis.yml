@@ -20,3 +20,15 @@ after_success:
   - docker push matipacheco/multi-nginx
   - docker push matipacheco/multi-server
   - docker push matipacheco/multi-worker
+
+deploy:
+  provide: elasticbeanstalk
+  region: us-east-1
+  app: multi-docker
+  env: MultiDocker-env
+  bucket_name: elasticbeanstalk-us-east-1-SOME_ID
+  bucket_path: docker-multi
+  on:
+    branch: 4-fibonacci-multi-container-calculator
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY

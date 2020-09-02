@@ -1,0 +1,6 @@
+.travis.yml
+client/Dockerfile
+nginx/Dockerfile
+server/Dockerfile
+worker/Dockerfile
+Dockerrun.aws.json
