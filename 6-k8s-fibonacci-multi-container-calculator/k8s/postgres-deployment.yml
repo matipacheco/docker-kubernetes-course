@@ -12,8 +12,18 @@ spec:
       labels:
         component: postgres
     spec:
+      volumes:
+        # We need to add a persistent volume so stored data isnt lost.
+        # As well as Docker volumes, this will store data in the host machine file sysyem.
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: database-persistent-volume-claim
       containers:
         - name: postgres
           image: postgres
           ports:
             - containerPort: 5432
+          volumeMounts:
+            - name: postgres-storage # Name of the volume defined above.
+              mountPath: /var/lib/postgresql/data # Directory in the computer where the volume will be mounted.
+              subPath: postgres
