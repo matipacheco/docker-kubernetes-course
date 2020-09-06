@@ -1,0 +1,24 @@
+# Runs a set of identical Pods (one or more).
+# Monitors the state of each Pod, updating as necessary.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: web
+  # Describes the configuration that is going to be used for
+  # every single Pod created by this Deployment.
+  # This Pod template uses the same configutarion that's in the client-pod.yml file.
+  template:
+    metadata:
+      labels:
+        component: web
+    spec:
+      containers:
+        - name: client
+          image: stephengrider/multi-client
+          ports:
+            - containerPort: 3000

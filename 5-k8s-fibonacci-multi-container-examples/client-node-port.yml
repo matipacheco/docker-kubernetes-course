@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+# Services set up networking configurations inside
+# a Kubernetes cluster.
+metadata:
+  name: client-node-port
+spec:
+  type: NodePort
+  ports:
+    - port: 3050
+      targetPort: 3000
+      nodePort: 31515
+  # Selector looks up Pods by their labels.
+  # In this case is looking for those Pods that have the component: web
+  # label key-value pair (defined in the client-pod.yml file)
+  selector:
+    component: web

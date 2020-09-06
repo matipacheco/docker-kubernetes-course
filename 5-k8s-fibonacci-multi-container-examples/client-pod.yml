@@ -1,0 +1,19 @@
+# Not all properties of a Pod config file can be updated on runtime!
+# For example: containers, name, ports can't be updated, but image can.
+apiVersion: v1
+kind: Pod
+# A Pod is meant to run a one or more containers that
+# have a really close dependecy/relation between them.
+metadata:
+  name: client-pod
+  labels:
+    # Note: Label names are arbitrary!
+    # There ain't no property component for labels.
+    # This could have been named tier: frontend, for example.
+    component: web
+spec:
+  containers:
+    - name: client
+      image: stephengrider/multi-client
+      ports:
+        - containerPort: 3000

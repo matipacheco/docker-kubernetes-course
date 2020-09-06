@@ -1,0 +1,16 @@
+# A ClusterIP provides access to an object (most commonly a set of Pods)
+# to everything else inside of our Cluster.
+
+# Its not like a NodePort, it does not alloe traffic to come in from the outside world!
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-cluster-ip-service
+spec:
+  type: ClusterIP
+  selector:
+    component: web
+  ports:
+    - port: 3000
+      targetPort: 3000
