@@ -14,7 +14,9 @@ spec:
     spec:
       volumes:
         # We need to add a persistent volume so stored data isnt lost.
-        # As well as Docker volumes, this will store data in the host machine file sysyem.
+        # This must be done because by default, container data is stored at a Pod level, and
+        # if the Pod crashes, the data will be lost.
+        # As well as Docker volumes, this will store data in the host machine (node) file sysyem.
         - name: postgres-storage
           persistentVolumeClaim:
             claimName: database-persistent-volume-claim
@@ -27,3 +29,9 @@ spec:
             - name: postgres-storage # Name of the volume defined above.
               mountPath: /var/lib/postgresql/data # Directory in the computer where the volume will be mounted.
               subPath: postgres
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword
+                  key: PGPASSWORD

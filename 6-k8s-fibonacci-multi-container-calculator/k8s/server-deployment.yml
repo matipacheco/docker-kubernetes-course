@@ -17,3 +17,24 @@ spec:
           image: stephengrider/multi-server
           ports:
             - containerPort: 5000
+          env:
+            - name: REDIS_HOST
+              value: redis-cluster-ip-service
+            - name: REDIS_PORT
+              value: "6379"
+            - name: PGUSER
+              value: postgres
+            - name: PGHOST
+              value: postgres-cluster-ip-service
+            - name: PGPORT
+              value: "5432"
+            - name: PGDATABASE
+              value: postgres
+            # For security issues, the password is set as a Kubernetes Secret object
+            # Password was created imperatively by doing:
+            # kubectl create secret generic pgpassword --from-literal PGPASSWORD=postgres
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword # Option at the right side of generic
+                  key: PGPASSWORD # Key at the right side of --from-literal
