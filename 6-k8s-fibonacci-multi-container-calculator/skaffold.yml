@@ -1,0 +1,37 @@
+apiVersion: skaffold/v1beta2
+kind: Config
+build:
+  local:
+    push: false
+  artifacts:
+    - image: stephengrider/multi-client
+      context: client # Indicates a directory! In this case /client
+      docker:
+        dockerfile: Dockerfile.dev
+      # This indicates Skaffold that every time it detects a change in a JS, CSS or HTML file,
+      # it has to inject those changes inside the corresponding Pod.
+      sync:
+        "**/*.js": .
+        "**/*.css": .
+        "**/*.html": .
+    - image: stephengrider/multi-server
+      context: server
+      docker:
+        dockerfile: Dockerfile.dev
+      sync:
+        "**/*.js": .
+    - image: stephengrider/multi-worker
+      context: worker
+      docker:
+        dockerfile: Dockerfile.dev
+      sync:
+        "**/*.js": .
+# Target Pod that will receive the injected changes.
+deploy:
+  kubectl:
+    manifest:
+      - k8s/client-deployment.yml
+      - k8s/server-deployment.yml
+      - k8s/worker-deployment.yml
+      - k8s/server-cluster-ip-service.yml
+      - k8s/client-cluster-ip-service.yml
